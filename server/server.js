@@ -19,9 +19,13 @@ connectDB();
 app.use(
   cors({
     origin: 'https://task-management-hzsq.vercel.app',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     credentials: true,
   })
 );
+
+// Handle preflight requests
+app.options('*', cors());
 
 // Middleware
 app.use(express.json());
@@ -35,7 +39,8 @@ app.use('/api/tasks', require('./routes/taskRoutes'));
 const io = new Server(server, {
   cors: {
     origin: 'https://task-management-hzsq.vercel.app',
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    credentials: true,
   },
 });
 
