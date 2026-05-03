@@ -3,7 +3,7 @@ const bcrypt = require('bcryptjs');
 
 const User = require('../models/User');
 
-// Register user
+// Register User
 const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
@@ -13,7 +13,7 @@ const registerUser = async (req, res) => {
     });
   }
 
-  // Check existing user
+  // Check if user exists
   const userExists = await User.findOne({ email });
 
   if (userExists) {
@@ -42,11 +42,11 @@ const registerUser = async (req, res) => {
   });
 };
 
-// Login user
+// Login User
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email }).select('+password');
+  const user = await User.findOne({ email });
 
   if (!user) {
     return res.status(401).json({
@@ -54,7 +54,11 @@ const loginUser = async (req, res) => {
     });
   }
 
-  const isMatch = await bcrypt.compare(password, user.password);
+  // Compare password
+  const isMatch = await bcrypt.compare(
+    password,
+    user.password
+  );
 
   if (!isMatch) {
     return res.status(401).json({
